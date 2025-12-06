@@ -57,11 +57,10 @@ class QDrantAdapter(VectorDBInterface):
 
     def get_qdrant_client(self) -> AsyncQdrantClient:
         if self.qdrant_path is not None:
-            return AsyncQdrantClient(path=self.qdrant_path, port=6333)
+            return AsyncQdrantClient(path=self.qdrant_path, port=6333, timeout=60)
         elif self.url is not None:
-            return AsyncQdrantClient(url=self.url, api_key=self.api_key, port=6333)
-
-        return AsyncQdrantClient(location=":memory:")
+            return AsyncQdrantClient(url=self.url, api_key=self.api_key, port=6333, timeout=60)
+        return AsyncQdrantClient(location=":memory:", timeout=60)
 
     async def embed_data(self, data: list[str]) -> list[float]:
         return await self.embedding_engine.embed_text(data)
